@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - FlatMatch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="signup-container">
+        <img src="logoflatmatch.png" alt="Logo FlatMatch" class="logo">
+        <h1>S'inscrire</h1>
+        <form id="signupForm">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Entrez votre email" required>
+
+            <label for="password">Mot de passe</label>
+            <div class="password-container">
+                <input type="password" id="password" placeholder="Créez un mot de passe" required>
+                <button type="button" id="togglePassword">👁️</button>
+            </div>
+            <ul id="passwordRequirements">
+                <li id="minChar">✅ Au moins 8 caractères</li>
+                <li id="uppercase">✅ Une majuscule</li>
+                <li id="specialChar">✅ Un caractère spécial</li>
+                <li id="number">✅ Un chiffre</li>
+            </ul>
+
+            <button type="submit" class="signup-button" disabled>S'inscrire</button>
+        </form>
+
+        <p class="login-prompt">
+            Vous avez déjà un compte ? <a href="connexion.html" class="login-link">Se connecter</a>
+        </p>
+    </div>
+
+    <script>
+        // Gestion de l'affichage/masquage du mot de passe
+        const passwordField = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+        togglePassword.addEventListener("click", () => {
+            const type = passwordField.type === "password" ? "text" : "password";
+            passwordField.type = type;
+            togglePassword.textContent = type === "password" ? "👁️" : "🙈";
+        });
+
+        // Vérification du mot de passe
+        const passwordRequirements = {
+            minChar: value => value.length >= 8,
+            uppercase: value => /[A-Z]/.test(value),
+            specialChar: value => /[!@#$%^&*(),.?":{}|<>]/.test(value),
+            number: value => /[0-9]/.test(value)
+        };
+
+        const passwordInput = document.getElementById("password");
+        const passwordReqList = document.getElementById("passwordRequirements").children;
+        const signupButton = document.querySelector(".signup-button");
+
+        passwordInput.addEventListener("input", () => {
+            const value = passwordInput.value;
+            let valid = true;
+
+            // Vérifie chaque critère et met à jour l'affichage
+            for (const key in passwordRequirements) {
+                const isValid = passwordRequirements[key](value);
+                const item = document.getElementById(key);
+                item.textContent = `${isValid ? "✅" : "❌"} ${item.textContent.slice(2)}`;
+                valid = valid && isValid;
+            }
+
+            // Active le bouton "S'inscrire" seulement si tous les critères sont remplis
+            signupButton.disabled = !valid;
+        });
+
+        // Gestion du formulaire d'inscription
+        document.getElementById("signupForm").addEventListener("submit", function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("email").value;
+            const password = passwordInput.value;
+
+            // Récupère les utilisateurs existants
+            const users = JSON.parse(localStorage.getItem("users") || "[]");
+
+            if (users.some(user => user.email === email)) {
+                alert("Un compte avec cet email existe déjà. Veuillez vous connecter.");
+                window.location.href = "connexion.html";
+            } else {
+                // Ajoute le nouvel utilisateur
+                users.push({ email, password });
+                localStorage.setItem("users", JSON.stringify(users));
+
+                alert("Compte créé avec succès ! Vous pouvez maintenant vous connecter.");
+                window.location.href = "connexion.html";
+            }
+        });
+    </script>
+</body>
+</html>

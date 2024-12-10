@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion - FlatMatch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="login-container">
+        <img src="logoflatmatch.png" alt="Logo FlatMatch" class="logo">
+        <h1>Se connecter</h1>
+        <form id="loginForm">
+            <label for="email">Email</label>
+            <input type="email" id="email" placeholder="Entrez votre email" required>
+            
+            <label for="password">Mot de passe</label>
+            <input type="password" id="password" placeholder="Entrez votre mot de passe" required>
+            
+            <a href="#" class="forgot-password">Mot de passe oublié ?</a>
+            
+            <button type="submit" class="login-button">Se connecter</button>
+        </form>
+        
+        <p class="signup-prompt">
+            Vous n'avez pas encore de compte ? <a href="inscription.html" class="signup-link">S'inscrire</a>
+        </p>
+    </div>
+
+<script>
+    // Récupère les utilisateurs depuis le localStorage
+    const users = JSON.parse(localStorage.getItem("users")) || [];
+
+    // Gestion du formulaire de connexion
+    document.getElementById("loginForm").addEventListener("submit", function(event) {
+        event.preventDefault(); // Empêche le rechargement de la page
+
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        // Vérifie si les informations correspondent à un utilisateur existant
+        const user = users.find(user => user.email === email && user.password === password);
+
+        if (user) {
+            // Redirige vers la page post-connexion si les informations sont correctes
+            alert(`Bienvenue, ${user.fullname} !`);
+            window.location.href = "dashboard.html";
+        } else {
+            // Redirige vers la page d'inscription en cas d'erreur
+            alert("Email ou mot de passe incorrect. Veuillez créer un compte.");
+            window.location.href = "inscription.html";
+        }
+    });
+</script>
+</body>
+</html>
+

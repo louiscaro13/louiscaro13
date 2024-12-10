@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informations Personnelles - FlatMatch</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="personal-info-container">
+        <header>
+            <img src="images/logoflatmatch.png" alt="Logo FlatMatch" class="logo">
+            <h1>Informations Personnelles</h1>
+            <p>Renseignez ou mettez à jour vos informations personnelles pour trouver le colocataire idéal.</p>
+        </header>
+
+        <div class="personal-info">
+            <h2>Modifier vos informations</h2>
+            <form id="personalInfoForm">
+                <!-- Nom -->
+                <label for="name">Nom complet</label>
+                <input type="text" id="name" placeholder="Entrez votre nom" required disabled>
+
+                <!-- Âge -->
+                <label for="age">Âge</label>
+                <input type="number" id="age" placeholder="Entrez votre âge" required disabled>
+
+                <!-- Sexe -->
+                <label for="gender">Sexe</label>
+                <select id="gender" required disabled>
+                    <option value="">Sélectionnez...</option>
+                    <option value="masculin">Masculin</option>
+                    <option value="féminin">Féminin</option>
+                    <option value="non-binaire">Non binaire</option>
+                </select>
+
+                <!-- Nationalité -->
+                <label for="nationality">Nationalité</label>
+                <input type="text" id="nationality" placeholder="Entrez votre nationalité" required disabled>
+
+                <!-- Niveau d'études -->
+                <label for="education">Niveau d'études</label>
+                <select id="education" required disabled>
+                    <option value="">Sélectionnez...</option>
+                    <option value="bac">BAC</option>
+                    <option value="bac+2">BAC+2</option>
+                    <option value="bac+3">BAC+3</option>
+                    <option value="bac+5">BAC+5</option>
+                    <option value="vie-active">Vie active</option>
+                </select>
+
+                <!-- Nombre de colocataires souhaités -->
+                <label for="roommates">Nombre de colocataires souhaités</label>
+                <input type="number" id="roommates" placeholder="Entrez le nombre de colocataires souhaités" required disabled>
+
+                <!-- Préférences -->
+                <label for="preferences">Préférences de colocation</label>
+                <textarea id="preferences" placeholder="Décrivez vos préférences de colocation (calme, non-fumeur, etc.)" disabled></textarea>
+
+                <!-- Boutons -->
+                <div class="button-group">
+                    <button type="button" id="editButton" class="edit-button">Modifier</button>
+                    <button type="submit" class="save-button" disabled>Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Préremplit le formulaire si les informations sont déjà enregistrées
+        const savedInfo = JSON.parse(localStorage.getItem("personalInfo"));
+        if (savedInfo) {
+            document.getElementById("name").value = savedInfo.name || "";
+            document.getElementById("age").value = savedInfo.age || "";
+            document.getElementById("gender").value = savedInfo.gender || "";
+            document.getElementById("nationality").value = savedInfo.nationality || "";
+            document.getElementById("education").value = savedInfo.education || "";
+            document.getElementById("roommates").value = savedInfo.roommates || "";
+            document.getElementById("preferences").value = savedInfo.preferences || "";
+        }
+
+        // Permet d'activer les champs pour l'édition
+        const editButton = document.getElementById("editButton");
+        const saveButton = document.querySelector(".save-button");
+        const inputs = document.querySelectorAll("#personalInfoForm input, #personalInfoForm select, #personalInfoForm textarea");
+
+        editButton.addEventListener("click", () => {
+            inputs.forEach(input => input.disabled = false);
+            saveButton.disabled = false;
+            editButton.disabled = true;
+        });
+
+        // Gestion du formulaire "Informations personnelles"
+        document.getElementById("personalInfoForm").addEventListener("submit", function(event) {
+            event.preventDefault(); // Empêche le rechargement de la page
+
+            const name = document.getElementById("name").value;
+            const age = document.getElementById("age").value;
+            const gender = document.getElementById("gender").value;
+            const nationality = document.getElementById("nationality").value;
+            const education = document.getElementById("education").value;
+            const roommates = document.getElementById("roommates").value;
+            const preferences = document.getElementById("preferences").value;
+
+            // Enregistre les informations personnelles dans localStorage
+            const personalInfo = { name, age, gender, nationality, education, roommates, preferences };
+            localStorage.setItem("personalInfo", JSON.stringify(personalInfo));
+
+            alert("Vos informations personnelles ont été enregistrées avec succès !");
+            window.location.href = "dashboard.html"; // Redirection vers le dashboard
+        });
+    </script>
+</body>
+</html>
